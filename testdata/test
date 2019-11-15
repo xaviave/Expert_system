@@ -1,0 +1,8 @@
+#((A + B + C | D) | B + D) | !(C | D) + A => G
+#W => Z
+#A + B => I
+#B => A
+(D ^ C) + T | T  => A
+
+=BD # arrivée
+?AI # depart
