@@ -75,7 +75,7 @@ def __check_rules(command_list: list):
             rules_list.append(Node(1, c.split('<=>'), c))
         else:
             return rules_list, command_list[i:]
-    raise Exception("Errors: No fact's init and No ueries")
+    raise Exception("Errors: No fact's init and No queries")
 
 
 def __check_facts(command_list: list, facts: dict):
