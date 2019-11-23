@@ -112,3 +112,4 @@ class Node:
         self.debug()
         addr = []
         facts = self.get_results_list()
+        print("TO DO:\n\t- make link betwin nodes\n\t- create the cache\n\t- opti the rules when same results\n\tadd facts in the op_func calculus\n")
