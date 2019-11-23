@@ -1,8 +1,7 @@
-((A + B + C | D) | B + D) | !(C | D) + A => G
+#((A + B + C | D) | B + D) | !(C | D) + A => G
 #W => Z
 #A + B => I
-#B => A
-#(A) + (B) => C
+#(A) + (!B) => C
 #(D ^ C) | T + !T + !(A + B) => A
 #A + B => (C + H)
 
