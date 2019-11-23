@@ -1,4 +1,4 @@
-from srcs.Obj import CalculBool
+from srcs.CalculBool import CalculBool
 
 
 class Node:
