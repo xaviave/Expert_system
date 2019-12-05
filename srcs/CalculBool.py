@@ -1,7 +1,6 @@
 from termcolor import colored
 
 
-#un graph avec composante connexe
 class CalculBool:
     id: int  # id of the Obj
     not_: list
@@ -113,6 +112,9 @@ class CalculBool:
         if self.not_[1] == 1:
             fact2 = self.__inverse(fact2)
         return self.op_func(fact, fact2)
+
+    def return_facts(self):
+        return f"{self.fact}{self.not_[0]}"
 
     def __str__(self):
         if self.op:

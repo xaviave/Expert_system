@@ -1,14 +1,19 @@
+import re
+
 from srcs.CalculBool import CalculBool
 
 
 class Node:
+    node_id: int = 0
     addr: list  # Liste des adresses des objs comportant un fait lié a facts
     cache: list  # list[3][dict] sauvegarde des derniers faits
     save_form: str  # formula w/o parsing
     op: int  # 0 -> 'implies' | 1 -> 'if and only if'
     rules: CalculBool
     results: CalculBool
-    facts: dict  # fait impliqué par les regles de objet
+    facts: list  # fait impliqué par les regles de objet
+    result_facts: list
+    only_facts: list
 
     @staticmethod
     def __create_obj(rule, id_):
@@ -90,8 +95,7 @@ class Node:
                 return form
         return form[0] if len(form) == 1 else self.__parse_rule(form, id_ + 1)
 
-    def init_obj(self, op, rules):
-        self.op = op
+    def init_obj(self, rules):
         if len(rules) != 2:
             raise Exception(f"The rules is not correctly formatted: {self.save_form}")
         if not all(rules):
@@ -100,16 +104,36 @@ class Node:
         self.rules = self.__parse_rule(list(rules[0].strip()), 0)
         self.results = self.__parse_rule(list(rules[1].strip()), 0)
 
-    def debug(self):
-        print(f"{self.rules}{' => ' if not self.op else ' <=> '}{self.results}")
+    def __str__(self):
+        return f"Node_id: {self.node_id} = {self.rules}{' => ' if not self.op else ' <=> '}{self.results}"
 
-    def get_results_list(self):
-        return "? je sais pas encore mais il faut une list de fait ['A', 'B']"
+    def get_results_list(self, result):
+        if len(result) > 2:
+            self.only_facts = []
+        else:
+            self.only_facts = self.results.return_facts()
+
+    def get_all_facts(self, result_rule):
+        self.facts = list(set(re.findall(r"[A-Z]", self.save_form)))
+        self.result_facts = list(set(re.findall(r"[A-Z]", result_rule)))
 
     def __init__(self, op, rules, c):
         self.save_form = c
-        obj = self.init_obj(op, rules)
-        self.debug()
-        addr = []
-        facts = self.get_results_list()
-        print("TO DO:\n\t- make link betwin nodes\n\t- create the cache\n\t- opti the rules when same results\n\tadd facts in the op_func calculus\n")
+        self.op = op
+        self.init_obj(rules)
+        self.addr = []
+        self.get_all_facts(rules[1])
+        self.get_results_list(rules[1])
+
+    def merge_node(self, new_rules: list):
+        for i, n_rule in enumerate(new_rules):
+            formula = [self.rules, '|']
+            if self.only_facts[1] == 1:
+                formula.insert(0, '!')
+            if n_rule.only_facts[1] == 1:
+                formula.append('!')
+            formula.append(n_rule.rules)
+            self.rules = CalculBool(formula, -i)
+
+    def return_addr_id(self):
+        return [i.node_id for i in self.addr]
