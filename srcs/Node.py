@@ -12,6 +12,7 @@ class Node:
     rules: CalculBool
     results: CalculBool
     facts: list  # fait impliqué par les regles de objet
+    rule_facts: list
     result_facts: list
     only_facts: list
 
@@ -113,16 +114,17 @@ class Node:
         else:
             self.only_facts = self.results.return_facts()
 
-    def get_all_facts(self, result_rule):
+    def get_all_facts(self, rules):
         self.facts = list(set(re.findall(r"[A-Z]", self.save_form)))
-        self.result_facts = list(set(re.findall(r"[A-Z]", result_rule)))
+        self.rule_facts = list(set(re.findall(r"[A-Z]", rules[0])))
+        self.result_facts = list(set(re.findall(r"[A-Z]", rules[1])))
 
     def __init__(self, op, rules, c):
         self.save_form = c
         self.op = op
         self.init_obj(rules)
         self.addr = []
-        self.get_all_facts(rules[1])
+        self.get_all_facts(rules)
         self.get_results_list(rules[1])
 
     def merge_node(self, new_rules: list):
@@ -137,3 +139,28 @@ class Node:
 
     def return_addr_id(self):
         return [i.node_id for i in self.addr]
+
+    def graph(self, facts, query):
+        from termcolor import colored
+        """
+            Enter in the first addr if needed else just calcul the Boolean with the facts
+        """
+        print(colored(f"start graph, query = {query} | {self}", 'red'))
+        if query not in self.result_facts:
+            self.results.apply_result(facts, self.results, self.rules.get_result(facts))
+            print(colored(f"end of graph no query | {self}\n", 'green'))
+            return facts
+        tmp_query = facts[query]
+        print(f"len = {len(self.addr)} | self = {self}")
+        #if len(self.addr) <= 1:
+        for a in self.addr:
+            print(f"a = {a} | self = {self}")
+            for second_query in a.rule_facts:
+                facts = a.graph(facts, second_query)
+            result = self.rules.get_result(facts)
+            facts = self.results.apply_result(facts, self.results, result)
+            if facts[query] != tmp_query:
+                print(colored(f"Weird i m here | {self}", 'yellow'))
+                return facts
+        print(colored(f"end of graph | {self}\n", 'blue'))
+        return facts

@@ -40,7 +40,7 @@ class CalculBool:
                 return rule[0]
         else:
             if self.op == '':
-                return 0
+                return ''
             if rule.count('!') == 2:
                 self.not_[1] = 1
                 return rule[4]
@@ -52,7 +52,7 @@ class CalculBool:
 
     @staticmethod
     def __check_fact(rule, fact):
-        if fact == 0:
+        if fact == '':
             return
         elif isinstance(fact, CalculBool):
             return
@@ -104,14 +104,44 @@ class CalculBool:
         # check if undefined
         return 1 if fact == 1 and fact2 == 1 else 0
 
-    def result(self, facts):
-        fact = facts[self.fact]
-        fact2 = facts[self.fact2]
+    def __get_result_fact(self, facts):
+        if isinstance(self.fact, CalculBool):
+            fact = self.fact.get_result(facts)
+        else:
+            fact = facts[self.fact]
+        return fact
+
+    def __get_result_fact2(self, facts):
+        if isinstance(self.fact2, CalculBool):
+            fact2 = self.fact2.get_result(facts)
+        else:
+            fact2 = facts[self.fact2]
+        return fact2
+
+    def get_result(self, facts):
+        fact = self.__get_result_fact(facts)
+        fact2 = self.__get_result_fact2(facts)
         if self.not_[0] == 1:
             fact = self.__inverse(fact)
         if self.not_[1] == 1:
             fact2 = self.__inverse(fact2)
+        print(f"op = {self.op}, fact {self.fact} = {fact}, fact2 {self.fact2} = {fact2}, func = {self.op_func(fact, fact2)}")
         return self.op_func(fact, fact2)
+
+    def apply_result(self, facts, result_facts, result):
+        print(f"Enter apply result, facts = {facts}, result = {result}")
+        if isinstance(result_facts.fact, CalculBool):
+            facts = result_facts.apply_result(facts, result_facts.fact,
+                                              result if not result_facts.not_[0] else self.__inverse(result))
+        else:
+            facts[result_facts.fact] = result if not result_facts.not_[0] else self.__inverse(result)
+        if isinstance(result_facts.fact2, CalculBool):
+            facts = result_facts.apply_result(facts, result_facts.fact2,
+                                              result if not result_facts.not_[1] else self.__inverse(result))
+        else:
+            facts[result_facts.fact2] = result if not result_facts.not_[1] else self.__inverse(result)
+        facts[''] = -1
+        return facts
 
     def return_facts(self):
         return f"{self.fact}{self.not_[0]}"

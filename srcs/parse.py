@@ -4,7 +4,6 @@ import argparse
 
 from srcs.Node import Node
 from termcolor import colored
-from srcs.CalculBool import CalculBool
 
 
 def __get_arg():
@@ -147,6 +146,6 @@ def parse():
     rules_list = __opti_nodes(rules_list)
     for i, r in enumerate(rules_list):
         r.node_id = i
-    print("TO DO:\n\t- create the cache\n\t- add facts in the op_func calculus\n\t- wait list in backward chaining")
     __link_nodes(rules_list)
+    facts[''] = -1
     return facts, queries, rules_list
