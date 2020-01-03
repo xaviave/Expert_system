@@ -129,19 +129,17 @@ class CalculBool:
         return self.op_func(fact, fact2)
 
     def apply_result(self, facts, result_facts, result):
-        if result == 0:
-            facts[''] = -1
-            return facts
-        if isinstance(result_facts.fact, CalculBool):
-            facts = result_facts.apply_result(facts, result_facts.fact,
-                                              result if not result_facts.not_[0] else self.__inverse(result))
-        else:
-            facts[result_facts.fact] = result if not result_facts.not_[0] else self.__inverse(result)
-        if isinstance(result_facts.fact2, CalculBool):
-            facts = result_facts.apply_result(facts, result_facts.fact2,
-                                              result if not result_facts.not_[1] else self.__inverse(result))
-        else:
-            facts[result_facts.fact2] = result if not result_facts.not_[1] else self.__inverse(result)
+        if result:
+            if isinstance(result_facts.fact, CalculBool):
+                facts = result_facts.apply_result(facts, result_facts.fact,
+                                                  result if not result_facts.not_[0] else self.__inverse(result))
+            else:
+                facts[result_facts.fact] = result if not result_facts.not_[0] else self.__inverse(result)
+            if isinstance(result_facts.fact2, CalculBool):
+                facts = result_facts.apply_result(facts, result_facts.fact2,
+                                                  result if not result_facts.not_[1] else self.__inverse(result))
+            else:
+                facts[result_facts.fact2] = result if not result_facts.not_[1] else self.__inverse(result)
         facts[''] = -1
         return facts
 

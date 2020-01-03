@@ -20,8 +20,8 @@ def __clean_file(file: str) -> list:
     s_file = [s for s in file.split('\n') if s.split()]
     command_list: list = []
     for i, s in enumerate(s_file):
-        if len(s) < 2:
-            raise Exception(f"Line must have 2 charateres, here: {len(s)} '{s}'")
+        if len(s) < 1:
+            raise Exception(f"Line must have 1 charaters, here: {len(s)} '{s}'")
         elif s.find('#') == -1 and s.find('=') == -1 and s.find('?') == -1:
             raise Exception(f"Bad char in this line: '{s}'")
         if s.find('#') and s[:s.find('#')]:
@@ -79,6 +79,8 @@ def __check_rules(command_list: list):
 def __check_facts(command_list: list, facts: dict) -> list:
     if len(command_list[0]) < 2:
         return command_list[1]
+    if command_list[0].count('?') == 1:
+        return command_list
     if not command_list[0].count('='):
         raise Exception(f"This line : '{command_list[0]}' is a query, not a fact's init (query is always after fact's init)" if command_list[0].count('?') else f"Fact's init is not correctly formatted: {command_list[0]}")
     if re.findall(r"[()<>+!|^?]]*", command_list[0]):
