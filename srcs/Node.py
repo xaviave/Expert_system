@@ -147,6 +147,7 @@ class Node:
         """
         print(colored(f"start graph, query = {query} | {self}", 'red'))
         if query not in self.result_facts:
+            print(f"Enter apply result, facts = {facts}, result = {self.rules.get_result(facts)}")
             self.results.apply_result(facts, self.results, self.rules.get_result(facts))
             print(colored(f"end of graph no query | {self}\n", 'green'))
             return facts
@@ -160,7 +161,7 @@ class Node:
             result = self.rules.get_result(facts)
             facts = self.results.apply_result(facts, self.results, result)
             if facts[query] != tmp_query:
-                print(colored(f"Weird i m here | {self}", 'yellow'))
+                print(colored(f"check if paradoxes here | {self}", 'yellow'))
                 return facts
         print(colored(f"end of graph | {self}\n", 'blue'))
         return facts

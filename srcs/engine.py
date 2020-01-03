@@ -20,17 +20,19 @@ def check_nodes(rules_list, facts, tmp_facts, queries):
 
 
 def launch_engine(facts, queries, rules_list):
-    print("TO DO:\n\t- create the cache\n\t- wait list in backward chaining\n\t- find paradoxe")
+    print("TO DO:\n\t- create the cache]\n\t- find paradoxe")
 
     for q in queries:
-        print("launch_engine")
+        print(f"\nlaunch_engine for {q}")
         tmp_facts = copy(facts)
         for r in rules_list:
             if q in r.result_facts:
-                tmp_facts = r.graph(tmp_facts, q)
+                facts = r.graph(tmp_facts, q)
                 break
+        """
         if check_nodes(rules_list, facts, tmp_facts, queries):
             facts = tmp_facts
             break
+            """
     print(f"Queries: {queries}\nThe result {'are' if len(queries) > 1 else 'is'} {get_result(queries, facts)}")
     pass
