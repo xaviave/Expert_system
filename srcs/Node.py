@@ -141,27 +141,19 @@ class Node:
         return [i.node_id for i in self.addr]
 
     def graph(self, facts, query):
-        from termcolor import colored
         """
             Enter in the first addr if needed else just calcul the Boolean with the facts
         """
-        print(colored(f"start graph, query = {query} | {self}", 'red'))
         if query not in self.result_facts:
-            print(f"Enter apply result, facts = {facts}, result = {self.rules.get_result(facts)}")
             self.results.apply_result(facts, self.results, self.rules.get_result(facts))
-            print(colored(f"end of graph no query | {self}\n", 'green'))
             return facts
         tmp_query = facts[query]
-        print(f"len = {len(self.addr)} | self = {self}")
-        #if len(self.addr) <= 1:
         for a in self.addr:
-            print(f"a = {a} | self = {self}")
             for second_query in a.rule_facts:
                 facts = a.graph(facts, second_query)
             result = self.rules.get_result(facts)
             facts = self.results.apply_result(facts, self.results, result)
             if facts[query] != tmp_query:
-                print(colored(f"check if paradoxes here | {self}", 'yellow'))
+                print(f"check if paradoxes here | {self}")
                 return facts
-        print(colored(f"end of graph | {self}\n", 'blue'))
         return facts

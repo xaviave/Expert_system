@@ -65,43 +65,36 @@ class CalculBool:
             raise Exception(f"Line Bad formated: {rule}")
 
     def __init__(self, rule, id_):
-        op_list = {'^': self.__or, '|': self.__xor, '+': self.__and, '': self.__pass}
+        op_dict = {'^': self.__or, '|': self.__xor, '+': self.__and, '': self.__pass}
         self.not_ = [0, 0]
         self.id = id_
         self.fact = self.__get_fact(True, rule)  # key of the fact dict
         self.op = self.__get_op(rule)
-        self.op_func = op_list[self.op]
+        self.op_func = op_dict[self.op]
         self.fact2 = self.__get_fact(False, rule)  # rule[2] if len(rule) != 1 else 0
         self.__check_fact(rule, self.fact)
         self.__check_fact(rule, self.fact2)
 
     @staticmethod
     def __inverse(nu):
-        if nu == 2:
-            return 2
-        else:
-            return 0 if nu else 1
+        return 0 if nu else 1
 
     @staticmethod
     def __pass(fact, fact2):
-        # check if undefined
         return 1 if fact else 0
 
     @staticmethod
     def __or(fact, fact2):
-        # check if undefined
         return 1 if fact or fact2 else 0
 
     @staticmethod
     def __xor(fact, fact2):
-        # check if undefined
         if (fact and not fact2) or (not fact and fact2):
             return 1
         return 0
 
     @staticmethod
     def __and(fact, fact2):
-        # check if undefined
         return 1 if fact == 1 and fact2 == 1 else 0
 
     def __get_result_fact(self, facts):
@@ -125,7 +118,6 @@ class CalculBool:
             fact = self.__inverse(fact)
         if self.not_[1] == 1:
             fact2 = self.__inverse(fact2)
-        print(f"op = {self.op}, fact {self.fact} = {fact}, fact2 {self.fact2} = {fact2}, func = {self.op_func(fact, fact2)}")
         return self.op_func(fact, fact2)
 
     def apply_result(self, facts, result_facts, result):

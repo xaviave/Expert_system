@@ -9,10 +9,7 @@ from termcolor import colored
 def __get_arg():
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", help="Enter the propositionnal file", type=str)
-    parser.add_argument("-v", "--verbosity", help="Increase output verbosity")
-    parser.add_argument("-i", "--interactive", help="Allow ")
     args = parser.parse_args()
-    print(f"{colored(args, 'red')}\n")
     return args
 
 
